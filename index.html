@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Management System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --accent: #4cc9f0;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --teacher: #7209b7;
+      --student: #f72585;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: 
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      color: white;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    /* Navigation Bar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 5%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+    
+    .nav-link {
+      color: var(--light);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-link.teacher {
+      background: rgba(114, 9, 183, 0.2);
+      border: 1px solid var(--teacher);
+    }
+    
+    .nav-link.student {
+      background: rgba(247, 37, 133, 0.2);
+      border: 1px solid var(--student);
+    }
+    
+    .nav-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .nav-link.teacher:hover {
+      background: rgba(114, 9, 183, 0.4);
+    }
+    
+    .nav-link.student:hover {
+      background: rgba(247, 37, 133, 0.4);
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 5% 4rem;
+    }
+    
+    h1 {
+      margin-bottom: 2rem;
+      font-size: 3.5rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 3rem;
+      color: var(--light);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+    
+    .button-container {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .portal-btn {
+      position: relative;
+      padding: 1.2rem 2.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      text-decoration: none;
+    }
+    
+    .portal-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .portal-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+    }
+    
+    .portal-btn:hover::before {
+      left: 100%;
+    }
+    
+    .teacher-btn {
+      border-color: var(--teacher);
+    }
+    
+    .student-btn {
+      border-color: var(--student);
+    }
+    
+    .features {
+      display: flex;
+      gap: 2rem;
+      margin-top: 3rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .feature-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+      border-radius: 15px;
+      width: 200px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-10px);
+    }
+    
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    
+    footer {
+      padding: 1.5rem;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+      }
+      
+      .nav-links {
+        width: 100%;
+        justify-content: space-around;
+        gap: 0.5rem;
+      }
+      
+      .nav-link {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+        margin-top: 2rem;
+      }
+      
+      .main-content {
+        padding: 7rem 5% 3rem;
+      }
+      
+      .button-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .portal-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .features {
+        gap: 1rem;
+      }
+      
+      .feature-card {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">AttendancePro</div>
+    <div class="nav-links">
+      <a href="frontends/teacher.html" class="nav-link teacher">
+        <i class="fas fa-chalkboard-teacher"></i> Teacher Portal
+      </a>
+      <a href="frontends/student.html" class="nav-link student">
+        <i class="fas fa-user-graduate"></i> Student Portal
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1>Attendance Management System</h1>
+    <p class="subtitle">Streamline your institution's attendance tracking with our modern, efficient solution for educators and students</p>
+    
+    <div class="button-container">
+      <a href="frontends/teacher.html" class="portal-btn teacher-btn">
+        <i class="fas fa-chalkboard-teacher"></i> Teacher Portal
+      </a>
+      <a href="frontends/student.html" class="portal-btn student-btn">
+        <i class="fas fa-user-graduate"></i> Student Portal
+      </a>
+    </div>
+    
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h3>Real-time Tracking</h3>
+        <p>Instant updates and notifications</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Analytics</h3>
+        <p>Detailed attendance reports</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <h3>Mobile Friendly</h3>
+        <p>Access from any device</p>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    &copy; 2023 AttendancePro | Designed by Sravanthi
+  </footer>
+</body>
+</html>
